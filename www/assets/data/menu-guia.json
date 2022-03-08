@@ -1,0 +1,22 @@
+[
+    {
+        "icon": "/assets/img/menu_audio/mapa.svg",
+        "name": "mapa",
+        "redirectTo": "/mapa"
+    },
+    {
+        "icon": "/assets/img/menu_audio/planta.svg",
+        "name": "planta",
+        "redirectTo": "/planta"
+    },
+    {
+        "icon": "/assets/img/menu_audio/detalles.svg",
+        "name": "textos",
+        "redirectTo": "/detalles"
+    },
+    {
+        "icon": "/assets/img/menu_audio/infografias_galeria.svg",
+        "name": "infografias",
+        "redirectTo": "/infografias"
+    }
+]

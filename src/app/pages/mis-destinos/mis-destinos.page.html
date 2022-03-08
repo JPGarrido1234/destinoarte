@@ -1,0 +1,973 @@
+<ion-header class="ion-no-border" *ngIf="!clickAudio">
+    <ion-toolbar class="toolbarppl">   
+        <ion-buttons slot="start">
+            <ion-button (click)="clickedStar()">
+                <ion-icon slot="icon-only" src="/assets/img/menu_atras.svg"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+      <ion-title class="ion-text-uppercase" style="font-size: unset; text-align: center; font-size: 1.4em;">
+        {{title_header}}
+      </ion-title> 
+      <ion-buttons slot="end">
+        <ion-menu-button menu="first"
+                         style="color: #39B1C0;">
+        </ion-menu-button>
+      </ion-buttons> 
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding fondoppal" *ngIf="!clickAudio">
+  <ion-content class="fondoppal" style="text-align: center;" *ngIf="showSearchCity">
+
+    <ion-card mode="ios">
+      <img src="/assets/img/imagen_españa_aplicacion.jpg"/>
+    </ion-card>
+    <ion-label style="color:#1F4D9A;"><h1 style="color:#575756; font-size:27px;">ESPAÑA</h1></ion-label>
+    <ion-list class="fondoppal" *ngIf="mydestines != null">
+      <ion-item class="fondoppal">
+        <!-- [interfaceOptions]="selectOptions" interface="action-sheet" (click)="onClickListColors()"-->
+        <ion-select [(ngModel)]="city" (click)="onClickListColors()" interface="alert" placeholder="Selecciona ciudad">
+          <ion-label>Ciudad</ion-label>
+          <ion-select-option name="city" class="custom-options" *ngFor="let city of res_prov_es" [value]="city">  
+            <div part="text">{{city}}</div>            
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-list>
+    <ion-button (click)="selectCity(city)"
+                class="btnAceptar"
+                type="submit" 
+                expand="block"
+                shape="round">
+      ACEPTAR
+    </ion-button>
+
+
+    <ion-card mode="ios">
+      <img src="/assets/img/imagen_otros_destinos.jpg"/>
+    </ion-card>
+    <ion-label style="color:#1F4D9A;"><h1 style="color:#575756; font-size:27px;">OTROS DESTINOS</h1></ion-label>
+    <ion-list class="fondoppal">
+      <ion-item class="fondoppal">
+        <ion-select [(ngModel)]="city" (click)="onClickListColors()" interface="alert" placeholder="Selecciona ciudad">
+          <ion-select-option name="city" class="custom-options" *ngFor="let city of res_prov_other" [value]="city">
+            <div part="text">{{city}}</div>
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-list>
+    <ion-button (click)="selectCity(city)"
+                class="btnAceptar"
+                type="submit" 
+                expand="block"
+                shape="round">
+      ACEPTAR
+    </ion-button>
+
+  </ion-content>
+  <ion-content class="fondoppal" *ngIf="!showSearchCity">
+    <div *ngIf="prov_img_url != null">
+      <div *ngFor="let item of prov_img_url">
+        <div *ngIf="item.nombre == title_header">
+          <ion-card>
+            <loading-image *ngIf="item.urlimg != null" [url]="item.urlimg"></loading-image>
+          </ion-card>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="mydestines.itinerario != null">
+      <div *ngFor="let destino of mydestines.itinerario; let b = index">
+        <div *ngIf="title_header == destino.ciudad_guia">
+          <div style="width: 100%; text-align: center;" *ngIf="destino.mapa != null">
+            <ion-label  class="title_color" [routerLink]="rutaMapa.concat(destino.idguia).concat('/0/1')">MAPA</ion-label>
+          </div>
+          <ion-item class="fondoppal" (click)="onClickShowIti(b)">
+            <ion-label style="color:#575756; font-size: 1.5em;">
+              {{destino.titulo}}
+            </ion-label>
+            <ion-icon [id]="showDIconAddItemsIA.concat(b)" style="margin-top: 0.5em;" class="color_icon" slot="end" name="add"></ion-icon>
+            <ion-icon [id]="showDIconRemoveItemsIA.concat(b)" style="margin-top: 0.5em; display:none;" class="color_icon "slot="end" name="remove"></ion-icon>
+          </ion-item>    
+            <div style="display:none;" [id]="showIA.concat(b)" *ngIf="thisIsArray(destino.partes) && destino.partes != null">
+              <div *ngFor="let nivel1 of destino.partes; let m = index" >
+                  <ion-card>
+                    <loading-image *ngIf="nivel1.img_thumb != null" [url]="nivel1.img_thumb"></loading-image>
+                  </ion-card>
+                  <ion-item class="fondoppal" lines="none" (click)="onClickShow(m, 'itinerario', b)">
+                      <ion-label style="color: #575756; font-size: 1.5em;">{{nivel1.titulo}}&nbsp;</ion-label>
+                      <ion-icon style="margin-top: 0.5em;" [id]="showIIconAdd.concat(b).concat(m)" class="color_icon" slot="end" name="add"></ion-icon>
+                      <ion-icon style="margin-top: 0.5em; display:none;" [id]="showIIconRemove.concat(b).concat(m)" class="color_icon "slot="end" name="remove"></ion-icon>                
+                  </ion-item>
+                  <div style="display: none;" [id]="showI.concat(b).concat(m)" *ngIf="thisIsArray(nivel1.partes) && nivel1.partes != null">
+                    <div *ngIf="nivel1.mapa != null">
+                      <div style="width: 100%; text-align: center;">
+                        <ion-label  class="title_color" [routerLink]="rutaMapa.concat(nivel1.idguiapartes).concat('/').concat(nivel1.id_itinerario).concat('/1')">MAPA DÍA&nbsp;{{m+1}}</ion-label>
+                      </div>
+                    </div>
+                    <div *ngFor="let nivel2 of nivel1.partes; let j = index">
+                      <ion-card>
+                        <loading-image *ngIf="nivel2.img_thumb != null" [url]="nivel2.img_thumb"></loading-image>
+                      </ion-card>
+                      <div *ngIf="nivel2.audio.length > 0 && nivel2.partes.length == 0">
+                        <ion-list class="fondoppal" *ngFor="let audio of nivel2.audio" (click)="onClickPlayMp3Partes(destino.idguia, nivel2, audio, 1, destino.img_thumb)">
+                          <ion-item class="fondoppal">
+                            <ion-label class="ion-text-uppercase">{{audio.title}}</ion-label>
+                            <ion-icon slot="end" class="color_play_icon" src="/assets/img/audio/play-circle-outline.svg"></ion-icon>
+                          </ion-item>
+                        </ion-list>
+                      </div>
+                      <div *ngIf="nivel2.audio.length == 0 && nivel2.partes.length > 0">
+                        <ion-list class="fondoppal">
+                          <ion-item class="fondoppal" (click)="onClickShowItems(m, j)">
+                            <ion-label class="ion-text-uppercase">{{nivel2.titulo}}</ion-label>
+                            <ion-icon [id]="showIIconAddItems.concat(m).concat(j)" class="color_icon" slot="end" name="add"></ion-icon>
+                            <ion-icon style="display: none;" [id]="showIIconRemoveItems.concat(m).concat(j)" class="color_icon" slot="end" name="remove"></ion-icon>
+                          </ion-item>
+                          <div style="display: none;" [id]="showIitems.concat(m).concat(j)" *ngIf="nivel2.partes != null && thisIsArray(nivel2.partes)">
+                            <ion-list class="fondoppal" *ngFor="let nivel3 of nivel2.partes">                
+                              <div *ngIf="nivel3.audio.length > 0">
+                                <div class="fondoppal" *ngFor="let audio of nivel3.audio" (click)="onClickPlayMp3Partes(destino.idguia, nivel3, audio, 1, destino.img_thumb)">
+                                  <ion-item class="fondoppal">
+                                    <ion-label class="ion-text-uppercase">{{audio.title}}</ion-label>
+                                    <ion-icon slot="end" class="color_play_icon" src="/assets/img/audio/play-circle-outline.svg"></ion-icon>
+                                  </ion-item>
+                                </div>
+                              </div>
+                              <div *ngIf="nivel3.partes != null && thisIsArray(nivel3.partes)">
+                                <ion-list class="fondoppal" *ngFor="let nivel4  of nivel3.partes">
+                                  <div *ngIf="nivel4.audio.length > 0">
+                                    <div class="fondoppal" *ngFor="let audio of nivel4.audio" (click)="onClickPlayMp3Partes(destino.idguia, nivel4, audio, 1, destino.img_thumb)">
+                                      <ion-item class="fondoppal">
+                                        <ion-label class="ion-text-uppercase">{{audio.title}}</ion-label>
+                                        <ion-icon slot="end" class="color_play_icon" src="/assets/img/audio/play-circle-outline.svg"></ion-icon>
+                                      </ion-item>
+                                    </div>
+                                  </div>
+                                </ion-list>
+                              </div>
+                            </ion-list>
+                          </div>
+                        </ion-list>
+                      </div>
+                    </div>
+                    
+                  </div> 
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="mydestines.dia != null">
+      <div *ngFor="let destino of mydestines.dia; let d = index">
+        <div *ngIf="title_header == destino.ciudad_guia">
+          <ion-item class="fondoppal" lines="none" *ngIf="mydestines.dia != null && cont_asoc_day != 0" (click)="onClickShowDay(d)">
+            <ion-label style="color:#575756; font-size: 1.5em;">{{destino.titulo}}&nbsp;</ion-label>
+            <ion-icon [id]="showDIconAddItemsA.concat(d)" style="margin-top: 0.1em;" class="color_icon" slot="end" name="add"></ion-icon>
+            <ion-icon [id]="showDIconRemoveItemsA.concat(d)" style="margin-top: 0.1em; display: none;" class="color_icon "slot="end" name="remove"></ion-icon>  
+          </ion-item>
+          <div style="display:none;" [id]="showDA.concat(d)" *ngIf="destino.partes != null && thisIsArray(destino.partes)">
+            <div *ngIf="destino.mapa != null">
+              <div style="width: 100%; text-align: center;">
+                <ion-label  class="title_color" [routerLink]="rutaMapa.concat(destino.idguia).concat('/').concat('/0').concat('/1')">MAPA</ion-label>
+              </div>
+            </div>
+            <div *ngFor="let item of destino.partes; let i = index"> 
+              <ion-card>
+                <loading-image *ngIf="item.img_thumb != null" [url]="item.img_thumb"></loading-image>
+              </ion-card>   
+              <div *ngIf="item.audio != null && thisIsArray(item.audio) && item.audio.length > 0">
+                <ion-list class="fondoppal" *ngFor="let audio of item.audio" (click)="onClickPlayMp3Partes(destino.idguia, item, audio, 2, destino.img_thumb)">
+                  <ion-item class="fondoppal">
+                    <ion-label class="ion-text-uppercase">{{audio.title}}</ion-label>
+                    <ion-icon slot="end" class="color_play_icon" src="/assets/img/audio/play-circle-outline.svg"></ion-icon>
+                  </ion-item>
+                </ion-list>
+              </div>
+              <div *ngIf="item.audio.length == 0">
+                <ion-list class="fondoppal">
+                  
+                  <ion-item class="fondoppal" (click)="onClickShowItemsDay(d, i)">
+                    <ion-label class="ion-text-uppercase">{{item.titulo}}</ion-label>
+                    <ion-icon [id]="showDIconAddItems.concat(d).concat(i)" style="margin-top: 0.1em;" class="color_icon" slot="end" name="add"></ion-icon>
+                    <ion-icon [id]="showDIconRemoveItems.concat(d).concat(i)" style="margin-top: 0.1em; display:none;" class="color_icon" slot="end" name="remove"></ion-icon>
+                  </ion-item>
+
+                  <div style="display: none;" [id]="showDItems.concat(d).concat(i)" *ngIf="item.partes != null && thisIsArray(item.partes)">
+                    <ion-list class="fondoppal" *ngFor="let items of item.partes">
+
+                      <div *ngIf="items.audio != null && thisIsArray(items.audio)">
+                        <div class="fondoppal" *ngFor="let audio of items.audio" (click)="onClickPlayMp3Partes(destino.idguia, items, audio, 2, destino.img_thumb)">
+                          <ion-item class="fondoppal">
+                            <ion-label class="ion-text-uppercase">{{audio.title}}</ion-label>
+                            <ion-icon slot="end" class="color_play_icon" src="/assets/img/audio/play-circle-outline.svg"></ion-icon>
+                          </ion-item>
+                        </div>
+                      </div>
+                      <div *ngIf="items.partes != null && thisIsArray(items.partes)">
+                        <div *ngFor="let part of items.partes">
+                          <div *ngIf="part.audio != null && thisIsArray(part.audio)">
+                            <div class="fondoppal" *ngFor="let audio of part.audio" (click)="onClickPlayMp3Partes(destino.idguia, part, audio, 2, destino.img_thumb)">
+                              <ion-item class="fondoppal">
+                                <ion-label class="ion-text-uppercase">{{audio.title}}</ion-label>
+                                <ion-icon slot="end" class="color_play_icon" src="/assets/img/audio/play-circle-outline.svg"></ion-icon>
+                              </ion-item>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </ion-list>
+                  </div>
+                </ion-list>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ion-item class="fondoppal" *ngIf="(mydestines.monumento != null && cont_asoc_mon != 0) || (mydestines.monumento_comp != null && cont_asoc_monc != 0)" lines="none" (click)="onClickShowMon()">
+      <ion-label style="color:#575756; font-size: 1.5em;">
+        Monumentos
+      </ion-label>
+      <ion-icon *ngIf="!show_mon" style="margin-top: 0.5em;" class="color_icon" slot="end" name="add"></ion-icon>
+      <ion-icon *ngIf="show_mon" style="margin-top: 0.5em;" class="color_icon "slot="end" name="remove"></ion-icon>
+    </ion-item>  
+    <div class="fondoppal" lines="full" *ngIf="mydestines != null && mydestines.monumento != null && show_mon">
+      <div *ngFor="let destino of mydestines.monumento; let x = index">
+        <div *ngIf="title_header == destino.ciudad_guia">
+          <ion-card mode="md">
+            <img *ngIf="destino.img_thumb == 0 || destino.img_thumb == null" src="/assets/img/picasso.jpg"/>
+            <loading-image *ngIf="destino.img_thumb != null" [url]="destino.img_thumb"></loading-image>
+          </ion-card>  
+          <ion-list class="fondoppal">
+            <ion-item class="fondoppal" (click)="onClickShow(x, 'mon')">
+              <ion-label class="ion-text-uppercase">{{destino.titulo}}</ion-label>
+              <ion-icon [id]="showMonIconAdd.concat(x)" class="color_icon" slot="end" name="add"></ion-icon>
+              <ion-icon [id]="showMonIconRemove.concat(x)" style="display:none;" class="color_icon "slot="end" name="remove"></ion-icon>
+            </ion-item>
+            <div style="display: none;" [id]="showM.concat(x)" *ngIf="(destino.partes != null && thisIsArray(destino.partes)) || (destino.audio != null && thisIsArray(destino.audio))">
+              <ion-item class="fondoppal" *ngFor="let item of destino.audio; let i = index" (click)="onClickPlayMp3(item, 0, 3, destino.img_thumb)"> 
+                <ion-label class="ion-text-uppercase">{{item.title}}</ion-label>
+                <ion-icon slot="end" class="color_play_icon" src="/assets/img/audio/play-circle-outline.svg"></ion-icon>
+              </ion-item>
+              <div *ngIf="thisIsArray(destino.partes)">
+                <ion-list class="fondoppal" *ngFor="let partes of destino.partes">
+                  <ion-item class="fondoppal" *ngFor="let item of partes.audio; let i = index" (click)="onClickPlayMp3Partes(destino.idguia, partes, item, 3, destino.img_thumb)">
+                    <ion-label class="ion-text-uppercase">{{item.title}}</ion-label>
+                    <ion-icon slot="end" class="color_play_icon" src="/assets/img/audio/play-circle-outline.svg"></ion-icon>
+                  </ion-item>
+                </ion-list>
+              </div>
+            </div>
+          </ion-list>   
+        </div>
+      </div>
+     
+      <div *ngIf="mydestines.monumento_comp != null" >
+        <div *ngFor="let destino of mydestines.monumento_comp; let monc = index">
+          <div *ngIf="title_header == destino.ciudad_guia">
+            <ion-card mode="md">
+              <loading-image *ngIf="destino.img_thumb != null" [url]="destino.img_thumb"></loading-image>
+            </ion-card>
+            <ion-list class="fondoppal">
+              <ion-item class="fondoppal" (click)="onClickShow(monc, 'monc')">
+                <ion-label class="ion-text-uppercase">{{destino.titulo}}</ion-label>
+                <ion-icon [id]="showMonCIconAdd.concat(monc)" class="color_icon" slot="end" name="add"></ion-icon>
+                <ion-icon [id]="showMonCIconRemove.concat(monc)" style="display:none;" class="color_icon "slot="end" name="remove"></ion-icon>
+              </ion-item>
+            </ion-list>
+            <ion-list style="display: none;" [id]="showMC.concat(monc)">
+              <ion-item class="fondoppal" *ngFor="let item of destino.audio" (click)="onClickPlayMp3(item, 0, 4, destino.img_thumb)">
+                <ion-label class="ion-text-uppercase">{{item.title}}</ion-label>  
+                <ion-icon slot="end" class="color_play_icon" src="/assets/img/audio/play-circle-outline.svg"></ion-icon>
+              </ion-item>
+              <div *ngIf="thisIsArray(destino.partes)">
+                <ion-list class="fondoppal" *ngFor="let partes of destino.partes">
+                  <ion-item class="fondoppal" *ngFor="let item of partes.audio" (click)="onClickPlayMp3Partes(destino.idguia, partes, item, 4, destino.img_thumb)">
+                    <ion-label class="ion-text-uppercase">{{item.title}}</ion-label>
+                    <ion-icon slot="end" class="color_play_icon" src="/assets/img/audio/play-circle-outline.svg"></ion-icon>
+                  </ion-item>
+                  <div *ngIf="thisIsArray(partes.partes)">
+                    <div class="fondoppal" *ngFor="let partes of partes.partes">
+                      <ion-item class="fondoppal" *ngFor="let item of partes.audio" (click)="onClickPlayMp3Partes(destino.idguia, partes, item, 4, destino.img_thumb)">
+                        <ion-label class="ion-text-uppercase">{{item.title}}</ion-label>
+                        <ion-icon slot="end" class="color_play_icon" src="/assets/img/audio/play-circle-outline.svg"></ion-icon>
+                      </ion-item>
+                    </div>
+                  </div>
+                </ion-list>
+              </div>
+            </ion-list>
+          </div>
+        </div>
+      </div>
+    </div>  
+    
+  </ion-content>
+</ion-content>
+
+
+<!-- REPRODUCTOR AUDIO -->
+<ion-header class="ion-no-border" *ngIf="clickAudio" translucent>
+  <ion-toolbar slot="fixed">   
+      <ion-buttons slot="start">
+          <ion-button (click)="clickedStar()">
+              <ion-icon slot="icon-only" src="/assets/img/menu_atras.svg"></ion-icon>
+          </ion-button>
+      </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-menu-button menu="first"
+                       style="color: #39B1C0;">
+      </ion-menu-button>
+    </ion-buttons> 
+  </ion-toolbar>
+</ion-header>
+<!--  [scrollEvents]="true" -->
+<ion-content class="fondoppal" fullscreen *ngIf="clickAudio && mydestines != null">
+    <!-- MONUMENTO -->  
+    <div *ngIf="tipoAudio == 3">
+      <div *ngIf="mydestines.monumento">
+        <div class="contenu" *ngFor="let destino of mydestines.monumento; let i = index">
+          <div *ngIf="responseIdguia == destino.idguia">
+            <img class="img_shadow" *ngIf="destino.img_thumb != null && responseIdItinerario == 0" [src]="destino.img_thumb"/>
+            <div *ngIf="responseIdItinerario != 0">
+              <div *ngIf="destino.partes != null">
+                <div *ngFor="let item of destino.partes">
+                  <div *ngIf="item.id_itinerario == destino.idguia && item.idguiapartes == responseIdItinerario">
+                    <img class="img_shadow" *ngIf="item.img_thumb != null" [src]="item.img_thumb"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <ion-grid class="ion-padding heightreproductor">
+              <ion-row  style="font-size: 0.9em;">
+                <div *ngIf="responseIdguia != null && responseIdItinerario == 0">
+                  <ion-col size="12">
+                    <ion-text style="color:#575756; float: left;" class="ion-text-uppercase">{{destino.titulo}}</ion-text>
+                  </ion-col>
+                </div>
+                <div *ngIf="responseIdguia != null && responseIdItinerario != 0">
+                  <div *ngIf="destino.partes != null">
+                    <div *ngFor="let item of destino.partes">
+                      <div *ngIf="item.id_itinerario == destino.idguia && item.idguiapartes == responseIdItinerario">
+                        <ion-col size="12">
+                          <ion-text style="color:#575756; float: left;" class="ion-text-uppercase">{{item.titulo}}</ion-text>
+                        </ion-col>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ion-row>
+              <ion-row  style="font-size: 0.8em;">
+                <ion-col size="12">
+                  <ion-text style="font-size: 1.2em; color:#575756;">{{destino.ciudad_guia}}</ion-text>
+                </ion-col>
+              </ion-row>  
+              <ion-row style="height: 35px; margin-top: 0em;">
+                <ion-col size="12">    
+                  <ion-range min="0" [max]="state.durationSec" pin="true" class="range_reproductor" step="1" [value]="seekbarCount">
+                    <ion-label *ngIf="state.time == null || state.time === undefined" slot="start">00:00</ion-label>
+                    <ion-label *ngIf="state.time != null" slot="start">{{state.time}}</ion-label>
+                    <ion-label *ngIf="state.duration == null || state.duration === undefined" slot="end">00:00</ion-label>
+                    <ion-label *ngIf="state.duration != null" slot="end">{{state.duration}}</ion-label>
+                  </ion-range>
+                </ion-col>
+              </ion-row>
+              <ion-row style="margin-top: 2em; justify-content: center;">
+                <ion-col size="2" class="colrepro" (click)="onClickAnterior(mydestines, responseIdguia, responseIdItinerario, 'mon', destino.img_thumb)">
+                  <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/anterior.svg"></ion-icon>
+                </ion-col> 
+                <ion-col size="2" class="colrepro" (click)="onClickRetroceso()">
+                  <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/retroceso.svg"></ion-icon>
+                </ion-col>
+                <ion-col size="2" *ngIf="!showPause" class="colrepro" (click)="play()">
+                  <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/play.svg"></ion-icon>
+                </ion-col>
+                <ion-col size="2" *ngIf="showPause" class="colrepro" (click)="pause()">
+                  <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/pause.svg"></ion-icon>
+                </ion-col>
+                <ion-col size="2" class="colrepro" (click)="onClickAvance()">
+                    <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/avance.svg"></ion-icon>
+                </ion-col>
+                <ion-col size="2" class="colrepro" (click)="onClickSiguiente(mydestines, responseIdguia, responseIdItinerario, 'mon', destino.img_thumb)">
+                    <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/siguiente.svg"></ion-icon> 
+                </ion-col>
+              </ion-row>
+              <div *ngIf="responseIdguia != null && responseIdItinerario == 0">
+                <ion-row style="text-align: center; margin-top:1em;">
+                  <ion-col *ngFor="let itemimg of menu_guia_aux">
+                    <div>
+                      <ion-icon [routerLink]="itemimg.redirectTo.concat('/').concat(responseIdguia).concat('/').concat(responseIdItinerario)" style="width: 40px; height: 30px;" [src]="itemimg.icon"></ion-icon>
+                      <br>
+                      <ion-text>{{itemimg.name}}</ion-text>
+                    </div>
+                  </ion-col>
+                </ion-row>      
+              </div>
+              <div *ngIf="responseIdguia != null && responseIdItinerario != 0">   
+                <ion-row style="text-align: center; margin-top:1em;">
+                  <ion-col *ngFor="let itemimg of menu_guia_aux">
+                    <div>
+                      <ion-icon [routerLink]="itemimg.redirectTo.concat('/').concat(responseIdguia).concat('/').concat(responseIdItinerario)" style="width: 40px; height: 30px;" [src]="itemimg.icon"></ion-icon>
+                      <br>
+                      <ion-text>{{itemimg.name}}</ion-text>
+                    </div>
+                  </ion-col>
+                </ion-row>
+              </div>         
+            </ion-grid>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- FIN MONUMENTO -->
+    <!-- MONUMENTO COMPUESTO -->
+    
+    <div *ngIf="tipoAudio == 4">
+      <div *ngIf="mydestines.monumento_comp">
+        <div class="contenu" *ngFor="let destino of mydestines.monumento_comp; let i = index">
+          <div *ngIf="destino.partes != null && destino.partes.length > 0 && thisIsArray(destino.partes)">
+            <div *ngFor="let item of destino.partes">
+              <div *ngIf="item.idguiapartes == responseIdguia && item.id_itinerario == responseIdItinerario">
+                <img class="img_shadow" *ngIf="item.img_thumb != null" [src]="item.img_thumb"/>
+                <ion-grid class="ion-padding heightreproductor">
+                  <ion-row  style="font-size: 0.9em;">
+                    <ion-col size="12">
+                      <ion-text style="color:#575756; float: left;" class="ion-text-uppercase">{{item.titulo}}</ion-text>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row  style="font-size: 0.8em;">
+                    <ion-col size="12">
+                      <ion-text style="font-size: 1.2em; color:#575756;">{{destino.ciudad_guia}}</ion-text>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row style="height: 40px; margin-top: 0em;">
+                    <ion-col size="12">
+                      <ion-range min="0" [max]="state.durationSec" pin="true" class="range_reproductor" step="1" [value]="seekbarCount">
+                        <ion-label *ngIf="state.time == null || state.time === undefined" slot="start">00:00</ion-label>
+                        <ion-label *ngIf="state.time != null" slot="start">{{state.time}}</ion-label>
+                        <ion-label *ngIf="state.duration == null || state.duration === undefined" slot="end">00:00</ion-label>
+                        <ion-label *ngIf="state.duration != null" slot="end">{{state.duration}}</ion-label>
+                      </ion-range>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row style="margin-top: 2em; justify-content: center;">
+                    <ion-col size="2" class="colrepro" (click)="onClickAnterior(mydestines, responseIdguia, responseIdItinerario, 'monc', destino.img_thumb)">
+                      <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/anterior.svg"></ion-icon>
+                    </ion-col> 
+                    <ion-col size="2" class="colrepro" (click)="onClickRetroceso()">
+                      <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/retroceso.svg"></ion-icon>
+                    </ion-col>
+                    <ion-col size="2" *ngIf="!showPause" (click)="play()" class="colrepro">
+                      <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/play.svg"></ion-icon>
+                    </ion-col>
+                    <ion-col size="2" *ngIf="showPause" (click)="pause()" class="colrepro">
+                      <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/pause.svg"></ion-icon>
+                    </ion-col>
+                    <ion-col size="2" (click)="onClickAvance()" class="colrepro">
+                      <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/avance.svg"></ion-icon>
+                    </ion-col>
+                    <ion-col size="2" class="colrepro" (click)="onClickSiguiente(mydestines, responseIdguia, responseIdItinerario, 'monc', destino.img_thumb)">
+                        <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/siguiente.svg"></ion-icon> 
+                    </ion-col>
+                  </ion-row>
+                  <ion-row style="text-align: center; margin-top:1em;">
+                    <ion-col *ngFor="let itemimg of menu_guia_aux">
+                      <div>
+                        <ion-icon [routerLink]="itemimg.redirectTo.concat('/').concat(responseIdguia).concat('/').concat(responseIdItinerario)" style="width: 40px; height: 30px;" [src]="itemimg.icon"></ion-icon>
+                        <br>
+                        <ion-text>{{itemimg.name}}</ion-text>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </div>
+              <div *ngIf="item.partes != null && thisIsArray(item.partes)">
+                <div *ngFor="let item of item.partes">
+                  <div *ngIf="item.idguiapartes == responseIdguia && item.id_itinerario == responseIdItinerario">
+                    <img class="img_shadow" *ngIf="item.img_thumb != null" [src]="item.img_thumb"/>
+                    <ion-grid class="ion-padding heightreproductor">
+                      <ion-row  style="font-size: 0.9em;">
+                        <ion-col size="12">
+                          <ion-text style="color:#575756; float: left;" class="ion-text-uppercase">{{item.titulo}}</ion-text>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row  style="font-size: 0.8em;">
+                        <ion-col size="12">
+                          <ion-text style="font-size: 1.2em; color:#575756;">{{destino.ciudad_guia}}</ion-text>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row style="height: 40px; margin-top: 0em;">
+                        <ion-col size="12">
+                          <ion-range min="0" [max]="state.durationSec" pin="true" class="range_reproductor" step="1" [value]="seekbarCount">
+                            <ion-label *ngIf="state.time == null || state.time === undefined" slot="start">00:00</ion-label>
+                            <ion-label *ngIf="state.time != null" slot="start">{{state.time}}</ion-label>
+                            <ion-label *ngIf="state.duration == null || state.duration === undefined" slot="end">00:00</ion-label>
+                            <ion-label *ngIf="state.duration != null" slot="end">{{state.duration}}</ion-label>
+                          </ion-range>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row style="margin-top: 2em; justify-content: center;">
+                        <ion-col size="2" class="colrepro" (click)="onClickAnterior(mydestines, responseIdguia, responseIdItinerario, 'monc', destino.img_thumb)">
+                          <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/anterior.svg"></ion-icon>
+                        </ion-col>
+                        <ion-col size="2" (click)="onClickRetroceso()" class="colrepro">
+                          <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/retroceso.svg"></ion-icon>
+                        </ion-col>
+                        <ion-col size="2" *ngIf="!showPause" (click)="play()" class="colrepro">
+                          <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/play.svg"></ion-icon>
+                        </ion-col>
+                        <ion-col size="2" *ngIf="showPause" (click)="pause()" class="colrepro">
+                            <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/pause.svg"></ion-icon>
+                        </ion-col>
+                        <ion-col size="2" (click)="onClickAvance()" class="colrepro">
+                            <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/avance.svg"></ion-icon>
+                        </ion-col>
+                        <ion-col size="2" class="colrepro" (click)="onClickSiguiente(mydestines, responseIdguia, responseIdItinerario, 'monc', destino.img_thumb)">
+                            <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/siguiente.svg"></ion-icon> 
+                        </ion-col>
+                      </ion-row>
+                      <ion-row style="text-align: center; margin-top:1em;">
+                        <ion-col *ngFor="let itemimg of menu_guia_aux">
+                          <div>
+                            <ion-icon [routerLink]="itemimg.redirectTo.concat('/').concat(responseIdguia).concat('/').concat(responseIdItinerario)" style="width: 40px; height: 30px;" [src]="itemimg.icon"></ion-icon>
+                            <br>
+                            <ion-text>{{itemimg.name}}</ion-text>
+                          </div>
+                        </ion-col>
+                      </ion-row>
+                    </ion-grid>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- FIN MONUMENTO COMPUESTO -->
+    <!-- DIA -->
+    <div *ngIf="tipoAudio == 2">
+      <div *ngIf="mydestines.dia">
+        <div class="contenu" *ngFor="let destino of mydestines.dia">
+          <div *ngIf="thisIsArray(destino.partes) && destino.partes != null && destino.partes.length > 0">
+            <div *ngFor="let item of destino.partes">
+              <div *ngIf="item.idguiapartes == responseIdguia && item.id_itinerario == responseIdItinerario">
+                <img class="img_shadow" *ngIf="item.img_thumb != null" [src]="item.img_thumb" />
+                <ion-grid class="ion-padding heightreproductor">
+                  <ion-row style="font-size: 0.9em;">
+                    <ion-col size="12">
+                      <ion-text style="color:#575756; float: left;" class="ion-text-uppercase">{{item.titulo}}</ion-text>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row  style="font-size: 0.8em;">
+                    <ion-col size="12">
+                      <ion-text style="font-size: 1.2em; color:#575756;">{{destino.ciudad_guia}}</ion-text>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row style="height: 40px; margin-top: 0em;">
+                    <ion-col size="12">
+                      <ion-range min="0" [max]="state.durationSec" pin="true" class="range_reproductor" step="1" [value]="seekbarCount">
+                        <ion-label *ngIf="state.time == null || state.time === undefined" slot="start">00:00</ion-label>
+                        <ion-label *ngIf="state.time != null" slot="start">{{state.time}}</ion-label>
+                        <ion-label *ngIf="state.duration == null || state.duration === undefined" slot="end">00:00</ion-label>
+                        <ion-label *ngIf="state.duration != null" slot="end">{{state.duration}}</ion-label>
+                      </ion-range>
+                    </ion-col>
+                  </ion-row>
+                  <ion-row style="margin-top: 2em; justify-content: center;">
+                    <ion-col size="2" class="colrepro" (click)="onClickAnterior(mydestines, responseIdguia, responseIdItinerario, 'dia', destino.img_thumb)">
+                      <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/anterior.svg"></ion-icon>
+                    </ion-col> 
+                    <ion-col size="2" (click)="onClickRetroceso()" class="colrepro">
+                      <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/retroceso.svg"></ion-icon>
+                    </ion-col>
+                    <ion-col size="2" *ngIf="!showPause" (click)="play(destino.audio)" class="colrepro">
+                        <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/play.svg"></ion-icon>
+                    </ion-col>
+                    <ion-col size="2" *ngIf="showPause" (click)="pause()" class="colrepro">
+                        <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/pause.svg"></ion-icon>
+                    </ion-col>
+                    <ion-col size="2" (click)="onClickAvance()" class="colrepro">
+                        <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/avance.svg"></ion-icon>
+                    </ion-col>
+                    <ion-col size="2" class="colrepro" (click)="onClickSiguiente(mydestines, responseIdguia, responseIdItinerario, 'dia', destino.img_thumb)">
+                        <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/siguiente.svg"></ion-icon> 
+                    </ion-col>
+                  </ion-row>
+                  <ion-row style="text-align: center; margin-top:1em;">
+                    <ion-col *ngFor="let itemimg of menu_guia_aux">
+                      <div>
+                        <ion-icon [routerLink]="itemimg.redirectTo.concat('/').concat(responseIdguia).concat('/').concat(responseIdItinerario)" style="width: 40px; height: 30px;" [src]="itemimg.icon"></ion-icon>
+                        <br>
+                        <ion-text>{{itemimg.name}}</ion-text>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </div>
+              <div *ngIf="thisIsArray(item.partes) && item.partes != null && item.partes.length > 0">
+                <div *ngFor="let item of item.partes">
+                  <div *ngIf="item.idguiapartes == responseIdguia && item.id_itinerario == responseIdItinerario">
+                    <img class="img_shadow" *ngIf="item.img_thumb != null" [src]="item.img_thumb"/>
+                    <ion-grid class="ion-padding heightreproductor">
+                      <ion-row  style="font-size: 0.9em;">
+                        <ion-col size="12">
+                          <ion-text style="color:#575756; float: left;" class="ion-text-uppercase">{{item.titulo}}</ion-text>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row  style="font-size: 0.8em;">
+                        <ion-col size="12">
+                          <ion-text style="font-size: 1.2em; color:#575756;">{{destino.ciudad_guia}}</ion-text>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row style="height: 40px; margin-top: 0em;">
+                        <ion-col size="12">
+                          <ion-range min="0" [max]="state.durationSec" pin="true" class="range_reproductor" step="1" [value]="seekbarCount">
+                            <ion-label *ngIf="state.time == null || state.time === undefined" slot="start">00:00</ion-label>
+                            <ion-label *ngIf="state.time != null" slot="start">{{state.time}}</ion-label>
+                            <ion-label *ngIf="state.duration == null || state.duration === undefined" slot="end">00:00</ion-label>
+                            <ion-label *ngIf="state.duration != null" slot="end">{{state.duration}}</ion-label>
+                          </ion-range>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row style="margin-top: 2em; justify-content: center;">
+                        <ion-col size="2" class="colrepro" (click)="onClickAnterior(mydestines, responseIdguia, responseIdItinerario, 'dia', destino.img_thumb)">
+                            <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/anterior.svg"></ion-icon>
+                        </ion-col>
+                        <ion-col size="2" (click)="onClickRetroceso()" class="colrepro">
+                            <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/retroceso.svg"></ion-icon>
+                        </ion-col>
+                        <ion-col size="2" *ngIf="!showPause" (click)="play(destino.audio)" class="colrepro">
+                          <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/play.svg"></ion-icon>
+                        </ion-col>
+                        <ion-col size="2" *ngIf="showPause" (click)="pause()" class="colrepro">
+                          <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/pause.svg"></ion-icon>
+                        </ion-col>
+                        <ion-col size="2" (click)="onClickAvance()" class="colrepro">
+                          <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/avance.svg"></ion-icon>
+                        </ion-col>
+                        <ion-col size="2" class="colrepro" (click)="onClickSiguiente(mydestines, responseIdguia, responseIdItinerario, 'dia', destino.img_thumb)">
+                          <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/siguiente.svg"></ion-icon> 
+                        </ion-col>
+                      </ion-row>
+                      <ion-row style="text-align: center; margin-top:1em;">
+                        <ion-col *ngFor="let itemimg of menu_guia_aux">
+                          <div>
+                            <ion-icon [routerLink]="itemimg.redirectTo.concat('/').concat(responseIdguia).concat('/').concat(responseIdItinerario)" style="width: 40px; height: 30px;" [src]="itemimg.icon"></ion-icon>
+                            <br>
+                            <ion-text>{{itemimg.name}}</ion-text>
+                          </div>
+                        </ion-col>
+                      </ion-row>
+                    </ion-grid>
+                  </div>
+                  <div *ngIf="thisIsArray(item.partes) && item.partes != null && item.partes.length > 0">
+                    <div *ngFor="let item of item.partes">
+                      <div *ngIf="item.idguiapartes == responseIdguia && item.id_itinerario == responseIdItinerario">
+                        <img class="img_shadow" *ngIf="item.img_thumb != null" [src]="item.img_thumb"/>
+                        <ion-grid class="ion-padding heightreproductor">
+                          <ion-row  style="font-size: 0.9em;">
+                            <ion-col size="12">
+                              <ion-text style="color:#575756; float: left;" class="ion-text-uppercase">{{item.titulo}}</ion-text>
+                            </ion-col>
+                          </ion-row>
+                          <ion-row  style="font-size: 0.8em;">
+                            <ion-col size="12">
+                              <ion-text style="font-size: 1.2em; color:#575756;">{{destino.ciudad_guia}}</ion-text>
+                            </ion-col>
+                          </ion-row>
+                          <ion-row style="height: 40px; margin-top: 0em;">
+                            <ion-col size="12">
+                              <ion-range min="0" [max]="state.durationSec" pin="true" class="range_reproductor" step="1" [value]="seekbarCount">
+                                <ion-label *ngIf="state.time == null || state.time === undefined" slot="start">00:00</ion-label>
+                                <ion-label *ngIf="state.time != null" slot="start">{{state.time}}</ion-label>
+                                <ion-label *ngIf="state.duration == null || state.duration === undefined" slot="end">00:00</ion-label>
+                                <ion-label *ngIf="state.duration != null" slot="end">{{state.duration}}</ion-label>
+                              </ion-range>
+                            </ion-col>
+                          </ion-row>
+                          <ion-row style="margin-top: 2em; justify-content: center;">
+                            <ion-col size="2" class="colrepro" (click)="onClickAnterior(mydestines, responseIdguia, responseIdItinerario, 'dia', destino.img_thumb)">
+                              <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/anterior.svg"></ion-icon>
+                            </ion-col>
+                            <ion-col size="2" (click)="onClickRetroceso()" class="colrepro">
+                              <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/retroceso.svg"></ion-icon>
+                            </ion-col>
+                            <ion-col size="2" *ngIf="!showPause" (click)="play(destino.audio)" class="colrepro">
+                              <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/play.svg"></ion-icon>
+                            </ion-col>
+                            <ion-col size="2" *ngIf="showPause" (click)="pause()" class="colrepro">
+                              <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/pause.svg"></ion-icon>
+                            </ion-col>
+                            <ion-col size="2" (click)="onClickAvance()" class="colrepro">
+                              <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/avance.svg"></ion-icon>
+                            </ion-col>
+                            <ion-col size="2" class="colrepro" (click)="onClickSiguiente(mydestines, responseIdguia, responseIdItinerario, 'dia', destino.img_thumb)">
+                              <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/siguiente.svg"></ion-icon> 
+                            </ion-col>
+                          </ion-row>
+                          <ion-row style="text-align: center; margin-top:1em;">
+                            <ion-col *ngFor="let itemimg of menu_guia_aux">
+                              <div>
+                                <ion-icon [routerLink]="itemimg.redirectTo.concat('/').concat(responseIdguia).concat('/').concat(responseIdItinerario)" style="width: 40px; height: 30px;" [src]="itemimg.icon"></ion-icon>
+                                <br>
+                                <ion-text>{{itemimg.name}}</ion-text>
+                              </div>
+                            </ion-col>
+                          </ion-row>
+                        </ion-grid>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>  
+    <!-- FIN DIA -->
+    <!-- ITINERARIO -->
+  <div *ngIf="tipoAudio == 1">
+    <div *ngIf="mydestines.itinerario">
+      <div class="contenu" *ngFor="let destino of mydestines.itinerario">
+        <div *ngIf="thisIsArray(destino.partes) && destino.partes != null && destino.partes.length > 0">
+          <div *ngFor="let item of destino.partes">
+            <div *ngIf="item.idguiapartes == responseIdguia && item.id_itinerario == responseIdItinerario">
+              <img class="img_shadow" *ngIf="item.img_thumb != null" [src]="item.img_thumb" />
+              <ion-grid class="ion-padding heightreproductor">
+                <ion-row style="font-size: 0.9em;">
+                  <ion-col size="12">
+                    <ion-text style="color:#575756; float: left;" class="ion-text-uppercase">{{item.titulo}}</ion-text>
+                  </ion-col>
+                </ion-row>
+                <ion-row  style="font-size: 0.8em;">
+                  <ion-col size="12">
+                    <ion-text style="font-size: 1.2em; color:#575756;">{{destino.ciudad_guia}}</ion-text>
+                  </ion-col>
+                </ion-row>
+                <ion-row style="height: 40px; margin-top: 0em;">
+                  <ion-col size="12" *ngIf="state">
+                    <ion-range min="0" [max]="state.durationSec" pin="true" class="range_reproductor" step="1" [value]="seekbarCount">
+                      <ion-label *ngIf="state.time == null || state.time === undefined" slot="start">00:00</ion-label>
+                      <ion-label *ngIf="state.time != null" slot="start">{{state.time}}</ion-label>
+                      <ion-label *ngIf="state.duration == null || state.duration === undefined" slot="end">00:00</ion-label>
+                      <ion-label *ngIf="state.duration != null" slot="end">{{state.duration}}</ion-label>
+                    </ion-range>
+                  </ion-col>
+                </ion-row>
+                <ion-row style="margin-top: 2em; justify-content: center;">
+                  <ion-col size="2" class="colrepro" (click)="onClickAnterior(mydestines, responseIdguia, responseIdItinerario, 'itinerario', destino.img_thumb)">
+                      <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/anterior.svg"></ion-icon>
+                  </ion-col> 
+                  <ion-col size="2" (click)="onClickRetroceso()" class="colrepro">
+                      <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/retroceso.svg"></ion-icon>
+                  </ion-col>
+                  <ion-col size="2" *ngIf="!showPause" (click)="play(destino.audio)" class="colrepro">
+                      <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/play.svg"></ion-icon>
+                  </ion-col>
+                  <ion-col size="2" *ngIf="showPause" (click)="pause()" class="colrepro">
+                      <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/pause.svg"></ion-icon>
+                  </ion-col>
+                  <ion-col size="2" (click)="onClickAvance()" class="colrepro">
+                      <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/avance.svg"></ion-icon>
+                  </ion-col>
+                  <ion-col size="2" class="colrepro" (click)="onClickSiguiente(mydestines, responseIdguia, responseIdItinerario, 'itinerario', destino.img_thumb)">
+                      <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/siguiente.svg"></ion-icon> 
+                  </ion-col>
+                </ion-row>
+                <ion-row style="text-align: center; margin-top:1em;">
+                  <ion-col *ngFor="let itemimg of menu_guia_aux">
+                    <div>
+                      <ion-icon [routerLink]="itemimg.redirectTo.concat('/').concat(responseIdguia).concat('/').concat(responseIdItinerario)" style="width: 40px; height: 30px;" [src]="itemimg.icon"></ion-icon>
+                      <br>
+                      <ion-text>{{itemimg.name}}</ion-text>
+                    </div>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </div>
+            <div *ngIf="thisIsArray(item.partes) && item.partes != null && item.partes.length > 0">
+              <div *ngFor="let item of item.partes">
+                <div *ngIf="item.idguiapartes == responseIdguia && item.id_itinerario == responseIdItinerario">
+                  <img class="img_shadow" *ngIf="item.img_thumb != null" [src]="item.img_thumb"/>
+                  <ion-grid class="ion-padding heightreproductor">
+                    <ion-row  style="font-size: 0.9em;">
+                      <ion-col size="12">
+                        <ion-text style="color:#575756; float: left;" class="ion-text-uppercase">{{item.titulo}}</ion-text>
+                      </ion-col>
+                    </ion-row>
+                    <ion-row  style="font-size: 0.8em;">
+                      <ion-col size="12">
+                        <ion-text style="font-size: 1.2em; color:#575756;">{{destino.ciudad_guia}}</ion-text>
+                      </ion-col>
+                    </ion-row>
+                    <ion-row style="height: 40px; margin-top: 0em;">
+                      <ion-col size="12" *ngIf="state">
+                        <ion-range min="0" [max]="state.durationSec" pin="true" class="range_reproductor" step="1" [value]="seekbarCount">
+                          <ion-label *ngIf="state.time == null || state.time === undefined" slot="start">00:00</ion-label>
+                          <ion-label *ngIf="state.time != null" slot="start">{{state.time}}</ion-label>
+                          <ion-label *ngIf="state.duration == null || state.duration === undefined" slot="end">00:00</ion-label>
+                          <ion-label *ngIf="state.duration != null" slot="end">{{state.duration}}</ion-label>
+                        </ion-range>
+                      </ion-col>
+                    </ion-row>
+                    <ion-row style="margin-top: 2em; justify-content: center;">
+                      <ion-col size="2" class="colrepro" (click)="onClickAnterior(mydestines, responseIdguia, responseIdItinerario, 'itinerario', destino.img_thumb)">
+                        <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/anterior.svg"></ion-icon>
+                      </ion-col>
+                      <ion-col size="2" (click)="onClickRetroceso()" class="colrepro">
+                        <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/retroceso.svg"></ion-icon>
+                      </ion-col>
+                      <ion-col size="2" *ngIf="!showPause" (click)="play(destino.audio)" class="colrepro">
+                        <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/play.svg"></ion-icon>
+                      </ion-col>
+                      <ion-col size="2" *ngIf="showPause" (click)="pause()" class="colrepro">
+                        <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/pause.svg"></ion-icon>
+                      </ion-col>
+                      <ion-col size="2" (click)="onClickAvance()" class="colrepro">
+                        <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/avance.svg"></ion-icon>
+                      </ion-col>
+                      <ion-col size="2" class="colrepro" (click)="onClickSiguiente(mydestines, responseIdguia, responseIdItinerario, 'itinerario', destino.img_thumb)" >
+                        <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/siguiente.svg"></ion-icon> 
+                      </ion-col>
+                    </ion-row>
+                    <ion-row style="text-align: center;  margin-top:1em;">
+                      <ion-col *ngFor="let itemimg of menu_guia_aux">
+                        <div>
+                          <ion-icon [routerLink]="itemimg.redirectTo.concat('/').concat(responseIdguia).concat('/').concat(responseIdItinerario)" style="width: 40px; height: 30px;" [src]="itemimg.icon"></ion-icon>
+                          <br>
+                          <ion-text>{{itemimg.name}}</ion-text>
+                        </div>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </div>
+                <div *ngIf="thisIsArray(item.partes) && item.partes != null && item.partes.length > 0">
+                  <div *ngFor="let item of item.partes">
+                    <div *ngIf="item.idguiapartes == responseIdguia && item.id_itinerario == responseIdItinerario">
+                      <img class="img_shadow" *ngIf="item.img_thumb != null" [src]="item.img_thumb"/>
+                      <ion-grid class="ion-padding heightreproductor">
+                        <ion-row  style="font-size: 0.9em;">
+                          <ion-col size="12">
+                            <ion-text style="color:#575756; float: left;" class="ion-text-uppercase">{{item.titulo}}</ion-text>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row  style="font-size: 0.8em;">
+                          <ion-col size="12">
+                            <ion-text style="font-size: 1.2em; color:#575756;">{{destino.ciudad_guia}}</ion-text>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row style="height: 40px; margin-top: 0em;">
+                          <ion-col size="12" *ngIf="state">
+                            <ion-range min="0" [max]="state.durationSec" pin="true" class="range_reproductor" step="1" [value]="seekbarCount">
+                              <ion-label *ngIf="state.time == null || state.time === undefined" slot="start">00:00</ion-label>
+                              <ion-label *ngIf="state.time != null" slot="start">{{state.time}}</ion-label>
+                              <ion-label *ngIf="state.duration == null || state.duration === undefined" slot="end">00:00</ion-label>
+                              <ion-label *ngIf="state.duration != null" slot="end">{{state.duration}}</ion-label>
+                            </ion-range>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row style="margin-top: 2em; justify-content: center;">
+                          <ion-col size="2" class="colrepro" (click)="onClickAnterior(mydestines, responseIdguia, responseIdItinerario, 'itinerario', destino.img_thumb)">
+                            <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/anterior.svg"></ion-icon>
+                          </ion-col>
+                          <ion-col size="2" (click)="onClickRetroceso()" class="colrepro">
+                            <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/retroceso.svg"></ion-icon>
+                          </ion-col>
+                          <ion-col size="2" *ngIf="!showPause" (click)="play(destino.audio)" class="colrepro">
+                            <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/play.svg"></ion-icon>
+                          </ion-col>
+                          <ion-col size="2" *ngIf="showPause" (click)="pause()" class="colrepro">
+                            <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/pause.svg"></ion-icon>
+                          </ion-col>
+                          <ion-col size="2" (click)="onClickAvance()" class="colrepro">
+                            <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/avance.svg"></ion-icon>
+                          </ion-col>
+                          <ion-col size="2" class="colrepro" (click)="onClickSiguiente(mydestines, responseIdguia, responseIdItinerario, 'itinerario', destino.img_thumb)">
+                            <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/siguiente.svg"></ion-icon> 
+                          </ion-col>
+                        </ion-row>
+                        <ion-row style="text-align: center;  margin-top:1em;">
+                          <ion-col *ngFor="let itemimg of menu_guia_aux">
+                            <div>
+                              <ion-icon [routerLink]="itemimg.redirectTo.concat('/').concat(responseIdguia).concat('/').concat(responseIdItinerario)" style="width: 40px; height: 30px;" [src]="itemimg.icon"></ion-icon>
+                              <br>
+                              <ion-text>{{itemimg.name}}</ion-text>
+                            </div>
+                          </ion-col>
+                        </ion-row>
+                      </ion-grid>
+                    </div>
+                    <div *ngIf="thisIsArray(item.partes) && item.partes != null && item.partes.length > 0">
+                      <div *ngFor="let item of item.partes">
+                        <div *ngIf="item.idguiapartes == responseIdguia && item.id_itinerario == responseIdItinerario">
+                          <img class="img_shadow" *ngIf="item.img_thumb != null" [src]="item.img_thumb"/>
+                          <ion-grid class="ion-padding heightreproductor">
+                            <ion-row  style="font-size: 0.9em;">
+                              <ion-col size="12">
+                                <ion-text style="color:#575756; float: left;" class="ion-text-uppercase">{{item.titulo}}</ion-text>
+                              </ion-col>
+                            </ion-row>
+                            <ion-row  style="font-size: 0.8em;">
+                              <ion-col size="12">
+                                <ion-text style="font-size: 1.2em; color:#575756;">{{destino.ciudad_guia}}</ion-text>
+                              </ion-col>
+                            </ion-row>
+                            <ion-row style="height: 40px; margin-top: 0em;">
+                              <ion-col size="12" *ngIf="state">
+                                <ion-range min="0" [max]="state.durationSec" pin="true" class="range_reproductor" step="1" [value]="seekbarCount">
+                                  <ion-label *ngIf="state.time == null || state.time === undefined" slot="start">00:00</ion-label>
+                                  <ion-label *ngIf="state.time != null" slot="start">{{state.time}}</ion-label>
+                                  <ion-label *ngIf="state.duration == null || state.duration === undefined" slot="end">00:00</ion-label>
+                                  <ion-label *ngIf="state.duration != null" slot="end">{{state.duration}}</ion-label>
+                                </ion-range>
+                              </ion-col>
+                            </ion-row>
+                            <ion-row style="margin-top: 2em; justify-content: center;">
+                              <ion-col size="2" class="colrepro" (click)="onClickAnterior(mydestines, responseIdguia, responseIdItinerario, 'itinerario', destino.img_thumb)">
+                                <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/anterior.svg"></ion-icon>
+                              </ion-col>
+                              <ion-col size="2" (click)="onClickRetroceso()" class="colrepro">
+                                <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/retroceso.svg"></ion-icon>
+                              </ion-col>
+                              <ion-col size="2" *ngIf="!showPause" (click)="play(destino.audio)" class="colrepro">
+                                <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/play.svg"></ion-icon>
+                              </ion-col>
+                              <ion-col size="2" *ngIf="showPause" (click)="pause()" class="colrepro">
+                                <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/pause.svg"></ion-icon>
+                              </ion-col>
+                              <ion-col size="2" (click)="onClickAvance()" class="colrepro">
+                                <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/avance.svg"></ion-icon>
+                              </ion-col>
+                              <ion-col size="2" class="colrepro" (click)="onClickSiguiente(mydestines, responseIdguia, responseIdItinerario, 'itinerario', destino.img_thumb)">
+                                <ion-icon style="width:50px; height:50px;" src="/assets/img/audio/siguiente.svg"></ion-icon> 
+                              </ion-col>
+                            </ion-row>
+                            <ion-row style="text-align: center; margin-top:1em;">
+                              <ion-col *ngFor="let itemimg of menu_guia_aux">
+                                <div>
+                                  <ion-icon [routerLink]="itemimg.redirectTo.concat('/').concat(responseIdguia).concat('/').concat(responseIdItinerario)" style="width: 40px; height: 30px;" [src]="itemimg.icon"></ion-icon>
+                                  <br>
+                                  <ion-text>{{itemimg.name}}</ion-text>
+                                </div>
+                              </ion-col>
+                            </ion-row>
+                          </ion-grid>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    <!-- FIN ITINERARIO -->
+</ion-content>
+<!-- FIN REPRODUCTOR AUDIO -->

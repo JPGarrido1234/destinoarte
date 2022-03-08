@@ -1,0 +1,62 @@
+<ion-header class="ion-no-border">
+    <ion-toolbar class="toolbarppl">   
+        <ion-buttons slot="start">
+            <ion-button (click)="clickedStar()">
+                <ion-icon slot="icon-only" src="/assets/img/menu_atras.svg"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+      <ion-title style="font-size: unset; text-align: center;">
+        BUSCAR
+      </ion-title> 
+      <ion-buttons slot="end">
+        <ion-menu-button menu="first"
+                         style="color: #39B1C0;">
+        </ion-menu-button>
+      </ion-buttons> 
+    </ion-toolbar>
+    <ion-searchbar *ngIf="data == null ? true : false" animated
+                (ionChange)="buscar( $event )">
+  </ion-searchbar>
+</ion-header>
+<ion-content class="ion-padding">
+  
+  <ion-list class="toolbarppl" lines="none">
+    <div *ngIf="list_disponibles != null && showSearch">
+      <div *ngIf="all_itinerarios != null">
+        <div *ngFor="let itinerario of all_itinerarios | filtro: textoBuscar: 'ciudad'" routerLink = "/tabs/buscar/{{itinerario.id_woo}}">
+          <ion-item class="fondoitem" [style.color]="itinerario.color">
+            {{ itinerario.titulo }}  
+          </ion-item>
+        </div>
+      </div>
+    </div>
+  </ion-list>
+  <ion-card *ngIf="response == null ? false : true">
+    <loading-image *ngIf="response.img_thumb != null" [url]="response.img_thumb"></loading-image>
+    <ion-card-header>
+      <ion-card-title class="title_card"><h3>{{response.titulo}}</h3></ion-card-title>
+      <ion-card-subtitle>{{response.nombre}}</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content class="content_card">
+      <p style="text-align: center;" *ngIf="response.resumen != ''">
+      {{response.resumen}}
+      <p>
+      <p style="text-align: center;" *ngIf="response.resumen == ''">
+        Loremipsu Lorem ipsu, Loremipsu Lorem ipsuLore mipsu Lorem ipsu Loremipsu Lorem ipsu
+        Loremipsu Lorem ipsuLoremipsu Lorem ipsu Loremipsu Lorem ipsu Loremipsu Lorem ipsu
+      </p>
+    </ion-card-content>
+    <ion-button [ngClass]="btnColor"
+                [disabled]="btnActivo"
+                (click)="buyToWeb(response.id_woo)"
+                type="submit" 
+                expand="block"
+                shape="round">
+      <ion-icon name="cart"></ion-icon>
+      {{btnText}}
+    </ion-button>
+    <ion-text class="text_aviso">
+      <h3>{{description}}.</h3>
+    </ion-text>
+  </ion-card>
+</ion-content>

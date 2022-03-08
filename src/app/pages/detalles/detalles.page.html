@@ -1,0 +1,62 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="toolbarppl">   
+      <ion-buttons slot="start">
+          <ion-button (click)="clickedStar()">
+              <ion-icon slot="icon-only" src="/assets/img/menu_atras.svg"></ion-icon>
+          </ion-button>
+      </ion-buttons> 
+      <ion-grid style="text-align: center;">
+          <ion-row>
+              <ion-col *ngFor="let item_det of menu_guia_aux">
+                <div>
+                    <ion-icon style="width: 50px; height: 40px;" [src]="item_det.icon" [routerLink]="item_det.redirectTo.concat('/').concat(idguia).concat('/').concat(iditinerario)"></ion-icon>
+                </div>
+              </ion-col>
+          </ion-row>
+      </ion-grid>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding fondoppal">
+    <div style="text-align:center; font-size: 1.4em; color:#1F4D9A; width: 100%;">
+        <ion-label class="ion-text-uppercase" *ngIf="titleaudio != null">
+            {{titleaudio}}
+        </ion-label>
+    </div>
+    <div *ngIf="detalle_monumento != null">
+        <div *ngFor="let item of detalle_monumento">
+            <img *ngIf="item.tipo == 2" [src]="item.contenido"/>
+            <br>
+            <ion-text *ngIf="item.tipo == 1" [innerHTML]="sanitizer.bypassSecurityTrustHtml(item.contenido)"></ion-text>
+            <br>
+        </div>
+    </div>
+    <ion-fab *ngIf="detalle_monumento != null" vertical="bottom" horizontal="end" slot="fixed" (click)="setSizeText(detalle_monumento)">
+        <ion-fab-button>
+          <ion-icon src="/assets/img/text-outline.svg"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
+    <div *ngIf="detalle != null">
+        <div *ngFor="let item of detalle">
+            <img *ngIf="item.id_tipo_parte == 2" [src]="item.contenido"/>
+            <br>
+            <ion-text *ngIf="item.id_tipo_parte == 1" [innerHTML]="sanitizer.bypassSecurityTrustHtml(item.contenido)"></ion-text>
+            <br>
+        </div>
+    </div>
+    <ion-fab *ngIf="detalle != null" vertical="bottom" horizontal="end" slot="fixed" (click)="setSizeText(detalle)">
+        <ion-fab-button>
+          <ion-icon src="/assets/img/text-outline.svg"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
+</ion-content>
+<ion-footer>
+    <ion-toolbar class="toolbarppl">
+        <ion-item>
+            <ion-icon *ngIf="showPlayAudio" slot="start" class="color_play_icon" src="/assets/img/audio/play.svg" (click)="playAudio()"></ion-icon>
+            <ion-icon *ngIf="!showPlayAudio" slot="start" class="color_play_icon" (click)="pause()" src="/assets/img/audio/pause.svg"></ion-icon>
+            <ion-title class="ion-text-uppercase">{{titleaudio}}</ion-title>
+        </ion-item>
+        
+    </ion-toolbar>
+</ion-footer>

@@ -1,0 +1,70 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="toolbarppl">
+    
+    <ion-buttons slot="start">
+      <ion-back-button style="color: #39B1C0;"
+                       defaultHref="/">
+      </ion-back-button>
+    </ion-buttons>
+
+    <ion-title style="font-size: unset; text-align: center; margin-right: 13%;">
+      INICIAR SESIÓN
+    </ion-title> 
+  </ion-toolbar>
+</ion-header>
+ 
+<ion-content class="ion-padding">
+
+  <form #formulario="ngForm" (ngSubmit)="onSubmit(formulario)">
+
+    <ion-input type="email" 
+                class="itemform"
+                placeholder="Email"
+                name="email"
+                [(ngModel)]="usuario.email"
+                pattern="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$"
+                required></ion-input>
+    
+
+    <ion-input type="password" 
+                class="itemform"
+                name="password"
+                [(ngModel)]="usuario.password"
+                required
+                placeholder="Contraseña"></ion-input>
+    <!--
+    <ion-button *ngIf="isLoggedIn === true" expand="block" fill="clear" shape="round">
+      Usuario registrado con facebook
+    </ion-button>
+    <ion-button *ngIf="isLoggedIn === false" expand="full" color="primary" (click)="fbLogin()">
+      Registrate con
+      <ion-icon name="logo-facebook"></ion-icon>
+    </ion-button>
+    -->
+    <ion-button [disabled]="formulario.invalid"
+                class="btnformppl"
+                type="submit" 
+                expand="block"
+                shape="round">
+      INICIAR SESIÓN
+    </ion-button>
+
+    <ion-button expand="block" 
+                class="btnformsec"
+                routerLink="/forget-pass"
+                style="text-transform: none;"
+                shape="round">
+      ¿No recuerdas tu contraseña?
+    </ion-button>
+
+    <ion-button expand="block" 
+                class="btnformsec"
+                routerLink="/registrar-usuario"
+                style="text-transform: none;"
+                shape="round">
+      ¿No estás registrado? Crea tu perfil.
+    </ion-button>
+
+  </form>  
+</ion-content>
+

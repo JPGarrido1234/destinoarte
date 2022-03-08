@@ -1,0 +1,8 @@
+{
+  "name": "destino-arte",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}
+

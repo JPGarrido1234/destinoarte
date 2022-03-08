@@ -1,0 +1,52 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="toolbarppl">
+    <ion-title style="font-size: unset; text-align: center; margin-left: 12%;">
+      INICIO
+    </ion-title> 
+    <ion-buttons slot="end">
+      <ion-menu-button menu="first"
+                       style="color: #39B1C0;">
+      </ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding fondoppal">
+  <!--
+  <ion-list class="fondoppal" style="background-color: #dfe6ee;" *ngIf="arr_mon_see != null && arr_mon_see.length > 0 && mydestines != null">
+    <p style="font-size: 0.9em; font-weight: bold; width: 60%; text-align: left;">Últimas audioguias reproducidas</p>
+    <div *ngFor="let key of arr_mon_see | objngfor">
+      <ion-card mode="md">
+        <loading-image *ngIf="arr_mon_see[key].imgthumb != null" [url]="arr_mon_see[key].imgthumb"></loading-image>
+      </ion-card>
+      <ion-item class="fondoppal" routerLink="/tabs/mis-destinos/{{arr_mon_see[key].idguia}}/{{arr_mon_see[key].iditinerario}}">
+        <ion-label class="ion-text-uppercase">{{arr_mon_see[key].title}}</ion-label>
+        <ion-icon slot="end" class="color_play_icon" src="/assets/img/audio/play-circle-outline.svg"></ion-icon>
+      </ion-item>
+    </div>
+  </ion-list>
+  -->
+  <ion-list style="background-color: #dfe6ee;">
+    <ion-item routerLink="/tabs/mis-destinos" style="--background: #dfe6ee;">
+      <ion-list style="width:100%; height: 100%; background-color: #dfe6ee;">
+        <div class="caja_texto"><img width="25" height="25" src="/assets/img/mis_destinos_config.svg"/></div>
+        <div class="caja_texto_dest"><p>Mis destinos</p></div>
+        <div class="caja_text_descrip"><p>Biblioteca con todos tus destinos en un sólo lugar para ver, oír y escuchar cuando quieras</p></div>
+      </ion-list>
+    </ion-item>
+    <ion-item routerLink="/tabs/buscar" style="--background: #dfe6ee;">
+      <ion-list style="width:100%; height: 100%; background-color: #dfe6ee;">
+        <div class="caja_texto"><img width="25" height="25" src="/assets/img/buscar_config.svg"/></div>
+        <div class="caja_texto_dest"><p>Buscar</p></div>
+        <div class="caja_text_descrip"><p>Busca y encuentra destinos en nuestro catálogo: monumentos, itinerarios, ciudades, packs, etc..</p></div>
+      </ion-list>
+    </ion-item>
+    <ion-item (click)="productBuy()" style="--background: #dfe6ee;">
+      <ion-list style="width:100%; height: 100%; background-color: #dfe6ee;">
+        <div class="caja_texto"><img width="25" height="25" src="/assets/img/comprar_config.svg"/></div>
+        <div class="caja_texto_dest"><p>Comprar</p></div>
+        <div class="caja_text_descrip"><p>Accede directamente a Destino Arte.</p></div>
+      </ion-list>
+    </ion-item>
+  </ion-list>
+</ion-content>
+

@@ -1,0 +1,63 @@
+<ion-header class="ion-no-border">
+    <ion-toolbar class="toolbarppl">
+      
+      <ion-buttons slot="start">
+        <ion-back-button style="color: #39B1C0;"
+                         defaultHref="/">
+        </ion-back-button>
+      </ion-buttons>
+  
+      <ion-title style="font-size: unset; text-align: center; margin-right: 8%;">
+        RECORDAR CONTRASEÑA
+      </ion-title> 
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+    <form *ngIf="showResetPass" #formulario="ngForm" (ngSubmit)="onSubmit(formulario)">
+        <ion-input  type="email" 
+                    class="itemform"
+                    placeholder="e-mail"
+                    name="email"
+                    [(ngModel)]="forgetUserPass.email"
+                    pattern="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$"
+                    required>
+        </ion-input>   
+        <ion-button [disabled]="formulario.invalid"
+                type="submit" 
+                class="btnformppl"
+                expand="block"
+                shape="round">
+        ENVIAR
+        </ion-button>
+      
+        <ion-text class="txt_forget">
+          <span>Recibirás en tu bandeja de entrada las indicaciones para recuperar tu contraseña.</span>
+        </ion-text>
+    </form>
+
+    <form *ngIf="!showResetPass" #myform="ngForm" (ngSubmit)="onSubmitBis(myform)">
+      <ion-input  type="password" 
+                  class="itemform"
+                  placeholder="password"
+                  name="password"
+                  [(ngModel)]="resetUser.password"
+                  required>
+      </ion-input> 
+      <ion-input  type="text" 
+                  class="itemform"
+                  placeholder="codigo"
+                  name="codigo"
+                  [(ngModel)]="resetUser.codigo"
+                  required>
+      </ion-input>     
+      <ion-button  [disabled]="myform.invalid"
+              type="submit" 
+              class="btnformppl"
+              expand="block"
+              shape="round">
+      RESET
+      </ion-button>
+  </form>
+</ion-content>

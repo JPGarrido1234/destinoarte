@@ -1,0 +1,77 @@
+<ion-header class="ion-no-border">
+    <ion-toolbar class="toolbarppl">
+      
+      <ion-buttons slot="start">
+        <ion-back-button style="color: #39B1C0;"
+                         defaultHref="/">
+        </ion-back-button>
+      </ion-buttons>
+  
+      <ion-title style="font-size: unset; text-align: center; margin-right: 15%;">
+        REGISTRO
+      </ion-title> 
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+    <form #formulario="ngForm" (ngSubmit)="onSubmit(formulario)">
+     
+            <ion-input type="text"
+                       class="itemform"
+                       placeholder="Nombre y apellidos"
+                       name="nameSurname"
+                       [(ngModel)]="registerUser.nameSurname"
+                       required>
+            </ion-input>      
+            <ion-input type="email"
+                       class="itemform"
+                       placeholder="Correo electrónico"
+                       name="email"
+                       [(ngModel)]="registerUser.email"
+                       pattern="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$"
+                       required>
+            </ion-input>         
+            <ion-input  type="email"
+                        class="itemform"
+                        placeholder="Confirmar correo electrónico"
+                        name="confirmar_email"
+                        [(ngModel)]="registerUser.conf_email"
+                        pattern="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$"
+                        required>
+            </ion-input>  
+            <ion-input type="text"
+                       class="itemform" 
+                       name="username"
+                       [(ngModel)]="registerUser.username"
+                       placeholder="Nombre de usuario"
+                       required>
+            </ion-input>     
+            <ion-input type="password" 
+                       class="itemform"
+                       name="pass"
+                       [(ngModel)]="registerUser.pass"
+                       placeholder="Contraseña"
+                       required>
+            </ion-input>
+            <ion-checkbox
+                      class="fondoppal"
+                      slot="start" 
+                      checked="false" 
+                      required>
+            </ion-checkbox>
+            <ion-label>Acepto <strong routerLink="/aviso-legal" style="color: #1F4D9A;">aviso legal, condiciones de uso y política de privacidad</strong></ion-label>
+            
+            
+            <ion-button [disabled]="formulario.invalid || registerUser.email != registerUser.conf_email"
+                    type="submit" 
+                    class="btnformppl"
+                    expand="block"
+                    shape="round">
+            REGISTRARSE
+            </ion-button>      
+    </form>
+    <ion-text class="txt_registro">
+        <span>También puedes registrarte automáticamente mediante:</span>
+    </ion-text>
+</ion-content>

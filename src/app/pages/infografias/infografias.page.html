@@ -1,0 +1,48 @@
+<ion-header id="header" style="display: block;" class="ion-no-border">
+  <ion-toolbar class="toolbarppl">   
+      <ion-buttons slot="start">
+          <ion-button (click)="clickedStar()">
+              <ion-icon slot="icon-only" src="/assets/img/menu_atras.svg"></ion-icon>
+          </ion-button>
+      </ion-buttons> 
+      <ion-grid>
+          <ion-row style="text-align: center;">
+              <ion-col *ngFor="let item_infog of menu_guia_aux">
+                <div>
+                    <ion-icon style="width: 50px; height: 40px;" [src]="item_infog.icon" [routerLink]="item_infog.redirectTo.concat('/').concat(idguia).concat('/').concat(iditinerario)"></ion-icon>
+                </div>
+              </ion-col>
+          </ion-row>
+      </ion-grid>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="fondoppal">
+    <ion-slides *ngIf="infografia_img" [options]="imgOpt" zoom>
+        <ion-slide>
+            <div class="swiper-zoom-container">
+                <img [src]="infografia_img_url"/>
+            </div>
+        </ion-slide>
+    </ion-slides>
+    <div class="fondoppal" *ngIf="!infografia_img">
+        <ion-list class="fondoppal" *ngFor="let item of response_info" lines="none">
+            <ion-item  class="fondoppal" (click)="showPhoto(item.id_img)">
+                <ion-card style="width:100%; background-color:#ffffff;">
+                    <img style="height: 270px;" [src]="item.id_img"/>
+                    <ion-card-header>
+                      <ion-card-title class="title_card"><h3 style="font-size: 1em;">{{item.titulo}}</h3></ion-card-title>
+                    </ion-card-header>
+                </ion-card>
+            </ion-item>    
+        </ion-list>
+    </div>
+</ion-content>
+<ion-footer id="footer" style="display: block;">
+    <ion-toolbar class="toolbarppl">
+        <ion-item>
+            <ion-icon *ngIf="showPlayAudio" slot="start" class="color_play_icon" src="/assets/img/audio/play.svg" (click)="playAudio()"></ion-icon>
+            <ion-icon *ngIf="!showPlayAudio" slot="start" class="color_play_icon" (click)="pause()" src="/assets/img/audio/pause.svg"></ion-icon>
+            <ion-title class="ion-text-uppercase">{{titleaudio}}</ion-title>
+        </ion-item>
+    </ion-toolbar>
+</ion-footer>

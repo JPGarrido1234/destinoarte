@@ -1,0 +1,46 @@
+{
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {}
+  },
+  "installed_plugins": {
+    "cordova-plugin-advanced-http": {
+      "PACKAGE_NAME": "com.destinoarte.appdev"
+    },
+    "cordova-plugin-device": {
+      "PACKAGE_NAME": "com.destinoarte.appdev"
+    },
+    "cordova-plugin-ionic-keyboard": {
+      "PACKAGE_NAME": "com.destinoarte.appdev"
+    },
+    "cordova-plugin-ionic-webview": {
+      "PACKAGE_NAME": "com.destinoarte.appdev"
+    },
+    "cordova-plugin-statusbar": {
+      "PACKAGE_NAME": "com.destinoarte.appdev"
+    },
+    "cordova-plugin-whitelist": {
+      "PACKAGE_NAME": "com.destinoarte.appdev"
+    },
+    "cordova-sqlite-storage": {
+      "PACKAGE_NAME": "com.destinoarte.appdev"
+    },
+    "cordova-plugin-streaming-media": {
+      "PACKAGE_NAME": "com.destinoarte.appdev"
+    },
+    "cordova-plugin-file": {
+      "PACKAGE_NAME": "com.destinoarte.appdev"
+    },
+    "cordova-plugin-file-transfer": {
+      "PACKAGE_NAME": "com.destinoarte.myappfacebook"
+    },
+    "cordova-plugin-media": {
+      "KEEP_AVAUDIOSESSION_ALWAYS_ACTIVE": "NO",
+      "PACKAGE_NAME": "com.destinoarte.myappfacebook"
+    }
+  },
+  "dependent_plugins": {}
+}

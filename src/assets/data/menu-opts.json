@@ -1,0 +1,32 @@
+[
+    {
+        "icon": "/assets/img/configuracion.svg",
+        "name": "Configuración",
+        "redirectTo": "/configuracion"
+      },
+      {
+        "icon": "/assets/img/mi_cuenta.svg",
+        "name": "Mi cuenta",
+        "redirectTo": "/mi-cuenta"
+      },
+      {
+        "icon": "/assets/img/mis_destinos_config.svg",
+        "name": "Mis destinos",
+        "redirectTo": "/tabs/mis-destinos"
+      },
+      {
+        "icon": "/assets/img/buscar_config.svg",
+        "name": "Buscar",
+        "redirectTo": "/tabs/buscar"
+      },
+      {
+        "icon": "/assets/img/condiciones_de_uso.svg",
+        "name": "Condiciones de uso",
+        "redirectTo": "/condiciones-uso"
+      },
+      {
+        "icon": "/assets/img/exit-outline.svg",
+        "name": "Cerrar sesión",
+        "redirectTo": "/inicio-sesion"
+      }
+]
